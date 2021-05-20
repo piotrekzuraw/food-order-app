@@ -7,11 +7,13 @@ import CartItem from "./CartItem";
 const Cart = (props) => {
   const cartContext = useContext(CartContext);
 
-  const totalAmount = `PLN ${cartContext.totalAmount.toFixed(2)}`;
+  const totalAmount = `PLN ${Math.max(cartContext.totalAmount).toFixed(2)}`;
 
   const hasItems = cartContext.items.length > 0;
 
-  const handleRemoveCartItem = (id) => {};
+  const handleRemoveCartItem = (id) => {
+    cartContext.removeItem(id);
+  };
 
   const handleAddCartItem = (item) => {
     cartContext.addItem({
@@ -28,8 +30,8 @@ const Cart = (props) => {
           name={item.name}
           amount={item.amount}
           price={item.price}
-          onRemove={handleRemoveCartItem}
-          onAdd={handleAddCartItem}
+          onRemove={handleRemoveCartItem.bind(null, item.id)}
+          onAdd={handleAddCartItem.bind(null, item)}
         />
       ))}
     </ul>
