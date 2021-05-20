@@ -13,7 +13,12 @@ const Cart = (props) => {
 
   const handleRemoveCartItem = (id) => {};
 
-  const handleAddCartItem = (item) => {};
+  const handleAddCartItem = (item) => {
+    cartContext.addItem({
+      ...item,
+      amount: 1,
+    });
+  };
 
   const cartItems = (
     <ul>
