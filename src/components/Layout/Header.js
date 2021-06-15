@@ -6,7 +6,7 @@ const Header = (props) => {
   return (
     <>
       <header className={classes.header}>
-        <h1>Food App</h1>
+        <h1>Asian Specials</h1>
         <HeaderCartButton onClick={props.onShowCart} />
       </header>
       <div className={classes["header-img"]}>
