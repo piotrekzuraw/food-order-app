@@ -7,6 +7,8 @@ import Checkout from "./Checkout";
 
 const Cart = (props) => {
   const [isCheckout, setIsCheckout] = useState(false);
+  const [submit, setSubmit] = useState(false);
+  const [didSubmit, setDidSubmit] = useState(false);
   const cartContext = useContext(CartContext);
 
   const totalAmount = `PLN ${Math.max(cartContext.totalAmount).toFixed(2)}`;
@@ -27,8 +29,9 @@ const Cart = (props) => {
     setIsCheckout(true);
   };
 
-  const handleOrderSubmit = (userData) => {
-    fetch(
+  const handleOrderSubmit = async (userData) => {
+    setSubmit(true);
+    await fetch(
       "https://food-order-app-74811-default-rtdb.firebaseio.com/orders.json",
       {
         method: "POST",
@@ -38,6 +41,9 @@ const Cart = (props) => {
         }),
       }
     );
+    setSubmit(false);
+    setDidSubmit(true);
+    cartContext.clearCart();
   };
 
   const cartItems = (
@@ -66,8 +72,9 @@ const Cart = (props) => {
       )}
     </div>
   );
-  return (
-    <Modal onClose={props.onClose}>
+
+  const cartModalContent = (
+    <>
       {cartItems}
       <div className={classes.total}>
         <span>Total Amount</span>
@@ -77,6 +84,25 @@ const Cart = (props) => {
         <Checkout onConfirm={handleOrderSubmit} onCancel={props.onClose} />
       )}
       {!isCheckout && modalActions}
+    </>
+  );
+  const submitModalContent = <p>Sending your order...</p>;
+  const didSubmitModalContent = (
+    <>
+      <p>We have your order, get ready for delicious meal!</p>
+      <div className={classes.actions}>
+        <button className={classes.button} onClick={props.onClose}>
+          Close
+        </button>
+      </div>
+    </>
+  );
+
+  return (
+    <Modal onClose={props.onClose}>
+      {!submit && !didSubmit && cartModalContent}
+      {submit && submitModalContent}
+      {didSubmit && didSubmitModalContent}
     </Modal>
   );
 };
