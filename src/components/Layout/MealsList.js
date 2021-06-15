@@ -5,6 +5,7 @@ import MealItem from "../Layout/MealItem.js";
 
 const MealsList = () => {
   const [meals, setMeals] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     //funkcja wywoływana przez useEffect nie może zwracać promisa, trzeba ją opakować w drugą funkcję
     const fetchMeals = async () => {
@@ -24,9 +25,18 @@ const MealsList = () => {
         });
       }
       setMeals(loadedMeals);
+      setIsLoading(false);
     };
     fetchMeals();
   }, []);
+
+  if (isLoading) {
+    return (
+      <section className={classes.MealsLoading}>
+        <p>Loading meals...</p>
+      </section>
+    );
+  }
 
   const mealsList = meals.map((meal) => (
     <MealItem
